@@ -237,7 +237,6 @@ class MessageBusImplTest {
             fail("Unexpected exception: " + e.getMessage());
         }
 
-        // Validate statistics updates
         assertEquals(15, statistics.getRunTime(), "RunTime should be 15.");
         assertEquals(2, statistics.getNumberOfDetectedObjects().get(), "Number of detected objects should be 2.");
         assertEquals(2, statistics.getNumberOfTrackedObjects().get(), "Number of tracked objects should be 2.");
