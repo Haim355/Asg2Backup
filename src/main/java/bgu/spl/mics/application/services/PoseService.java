@@ -37,7 +37,7 @@ public class PoseService extends MicroService {
             if(currentpose!=null) {
                 sendEvent(new PoseEvent(this.getName(), currentpose, broadcast.getTickTime()));
             }
-            if(gpsimu.getStatus()==STATUS.DOWN){
+            if(gpsimu.getStatus() == STATUS.DOWN){
                 sendBroadcast(new TerminatedBroadcast(this));
                 terminate();
             }

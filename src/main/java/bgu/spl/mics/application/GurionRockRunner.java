@@ -1,7 +1,10 @@
 package bgu.spl.mics.application;
 
+import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
+import bgu.spl.mics.parserClasses.OutputData;
+import bgu.spl.mics.parserClasses.OutputSerializer;
 import com.google.gson.*;
 
 import java.io.FileNotFoundException;
@@ -10,8 +13,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The main entry point for the GurionRock Pro Max Ultra Over 9000 simulation.
@@ -23,7 +28,7 @@ import java.util.concurrent.Executors;
 public class GurionRockRunner {
 
     public static void main(String[] args) {
-        int numberofservices =3;
+        int numberofservices = 3;
         if (args.length == 0) {
             System.err.println("Configuration file path must be provided as an argument.");
             return;
@@ -140,8 +145,8 @@ public class GurionRockRunner {
 
         //*********************** FusionSlam and Statistics ******************************//
         FusionSlam fusionSlam = FusionSlam.getInstance();
-        //NOAM - the +1 is for timeService? no need to count poseService and FusionSlamService?
-        fusionSlam.setNumberOfNumberOfServices(lidarServices.size()+ cameraServices.size()+1);
+        ///NOAM - the +1 is for timeService? no need to count poseService and FusionSlamService?
+        fusionSlam.setNumberOfNumberOfServices(lidarServices.size() + cameraServices.size() + 1);
         FusionSlamService fusionSlamService = new FusionSlamService(fusionSlam);
 
         //*********************** Simulation Setup ******************************//
@@ -159,27 +164,40 @@ public class GurionRockRunner {
         executor.submit(fusionSlamService);
         executor.submit(timeService);
 
-        //*********************** Parsing output file ******************************//
 
-        StatisticalFolder stats = StatisticalFolder.getInstance();
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+                System.err.println("Services did not terminate properly.");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        //*********************** Parsing output file ******************************//
+        StatisticalFolder stats = MicroService.getStatisticsInstance();
+        System.out.println(stats.toString());
         OutputData outputData = OutputData.getInstance();
 
-        outputData.setRuntime(stats.getRunTime());
+        outputData.setSystemRuntime(stats.getRunTime());
         outputData.setNumDetectedObjects(stats.getNumberOfDetectedObjects().get());
         outputData.setNumTrackedObjects(stats.getNumberOfTrackedObjects().get());
         outputData.setNumLandmarks(stats.getNumberOfLandmarks());
-        outputData.setLandmarks(fusionSlam.getLandMarks());
+        outputData.setLandMarks((Map<String, LandMark>) fusionSlam.getLandMarks());
 
-        // Serialize to JSON
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        // Create Gson with custom serializer
+        gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(OutputData.class, new OutputSerializer())
+                .create();
+
         String jsonOutput = gson.toJson(outputData);
 
         try (FileWriter writer = new FileWriter("output_file.json")) {
             writer.write(jsonOutput);
-            System.out.println("JSON output saved to: " + "output_file.json");
+            System.out.println("JSON output saved to: output_file.json");
         } catch (IOException e) {
             System.err.println("Error writing JSON file: " + e.getMessage());
         }
-        executor.shutdown();
+
     }
 }

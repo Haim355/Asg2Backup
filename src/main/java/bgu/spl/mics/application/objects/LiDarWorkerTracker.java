@@ -22,6 +22,8 @@ public class LiDarWorkerTracker {
     public LiDarWorkerTracker(int id, int frequency) {
         this.id = id;
         this.frequency = frequency;
+        status = STATUS.UP;
+        lastTrackedObjects = new ArrayList<>();
     }
 
     public void postDeserialize() {

@@ -1,5 +1,7 @@
-package bgu.spl.mics.application.objects;
+package bgu.spl.mics.parserClasses;
 
+import bgu.spl.mics.application.objects.Camera;
+import bgu.spl.mics.application.objects.StampedDetectedObjects;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 

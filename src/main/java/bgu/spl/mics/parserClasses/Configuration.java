@@ -1,11 +1,9 @@
-package bgu.spl.mics.application.objects;
+package bgu.spl.mics.parserClasses;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import bgu.spl.mics.application.objects.Camera;
+import bgu.spl.mics.application.objects.LiDarWorkerTracker;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Configuration {
         private ArrayList<Camera> Cameras;

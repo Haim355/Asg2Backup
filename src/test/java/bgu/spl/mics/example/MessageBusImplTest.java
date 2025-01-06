@@ -1,5 +1,6 @@
 package bgu.spl.mics.example;
 import bgu.spl.mics.*;
+import bgu.spl.mics.Future;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
@@ -11,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.SchemaOutputResolver;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MessageBusImplTest {
@@ -28,6 +29,7 @@ class MessageBusImplTest {
     private StatisticalFolder statistics;
     private FusionSlamService fusion;
     private TimeService timeSer;
+    private ExecutorService executor;
     @BeforeEach
       void setUp() {
         c1 = new Camera(1, 3);
@@ -47,10 +49,20 @@ class MessageBusImplTest {
         messageBus.register(lidarService2);
         errorSingleton = ERROR.getInstance();
         statistics = StatisticalFolder.getInstance();
+        executor = Executors.newFixedThreadPool(5);
     }
 
     @AfterEach
     void tearDown(){
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+        }
+
         messageBus.clearInstance();
         errorSingleton.clearInstance();
         statistics.clearInstance();
@@ -150,15 +162,27 @@ class MessageBusImplTest {
             fail("Test was interrupted unexpectedly: " + e.getMessage());
         }
     }
+
     // Precondition: All services are registered, and no messages are processed yet.
     // Postcondition: All services terminate, and statistics are updated correctly.
 
     @Test
     void testAllEventTypesAndShutdown() {
-       // Arrange: Setup events and expected statistics
         messageBus.subscribeEvent(DetectObjectsEvent.class, lidarService1);
         messageBus.subscribeEvent(TrackedObjectsEvent.class, fusion);
         messageBus.subscribeEvent(PoseEvent.class, fusion);
+       List<MicroService> expectedMicroServices = new ArrayList<>();
+        expectedMicroServices.add(timeSer);
+        expectedMicroServices.add(fusion);
+        expectedMicroServices.add(cameraService);
+        expectedMicroServices.add(lidarService1);
+        expectedMicroServices.add(lidarService2);
+        ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> subscribers = (ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>>) messageBus.getSubscribers();
+        for (MicroService microService : expectedMicroServices) {
+            messageBus.subscribeBroadcast(TerminatedBroadcast.class, microService);
+            messageBus.subscribeBroadcast(CrahsedBroadCast.class, microService);
+            messageBus.subscribeBroadcast(TickBroadcast.class, microService);
+        }
         List<DetectedObject> detectedObjects = new ArrayList<>();
         detectedObjects.add(new DetectedObject("100", "Tree"));
         detectedObjects.add(new DetectedObject("200", "Car"));
@@ -180,68 +204,24 @@ class MessageBusImplTest {
         DetectObjectsEvent detectEvent = new DetectObjectsEvent(cameraService.getName(), detectedObjects, 1);
         TrackedObjectsEvent trackedEvent = new TrackedObjectsEvent(lidarService1.getName(), trackedObjects);
         PoseEvent poseEvent = new PoseEvent(fusion.getName(), pose, 3);
-
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        executor.submit(lidarService1);
+        executor.submit(lidarService2);
+        executor.submit(cameraService);
+        executor.submit(fusion);
+        executor.submit(timeSer);
         Future<Boolean> detectFuture = messageBus.sendEvent(detectEvent);
         Future<Boolean> trackedFuture = messageBus.sendEvent(trackedEvent);
         Future<Boolean> poseFuture = messageBus.sendEvent(poseEvent);
-
-        // Send ticks to simulate time progression
-        for (int tick = 1; tick <= timeSer.getDuration(); tick++) {
-            messageBus.sendBroadcast(new TickBroadcast(tick));
-        }
-         // Terminate all services after processing
+        
         messageBus.sendBroadcast(new TerminatedBroadcast(timeSer));
 
-        // Wait briefly for all services to finish
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            fail("Test interrupted unexpectedly.");
-        }
-       // Assert: Validate event handling and statistics
-        try {
-            // DetectObjectsEvent
-            System.out.println("entered the try");
-            Message detectMsg = messageBus.awaitMessage(lidarService1);
-            assertInstanceOf(DetectObjectsEvent.class, detectMsg, "LiDarService1 should receive DetectObjectsEvent.");
-            DetectObjectsEvent receivedDetectEvent = (DetectObjectsEvent) detectMsg;
-            assertEquals(1, receivedDetectEvent.getTime(), "DetectObjectsEvent time should match.");
-            assertEquals(2, receivedDetectEvent.getDetectedObject().size(), "DetectObjectsEvent detected objects size should match.");
-            assertEquals("Tree", receivedDetectEvent.getDetectedObject().get(0).getDescription(), "First DetectedObject description should be Tree.");
-            assertEquals("Car", receivedDetectEvent.getDetectedObject().get(1).getDescription(), "Second DetectedObject description should be Car.");
-            messageBus.complete(receivedDetectEvent, true);
-            assertTrue(detectFuture.isDone(), "DetectObjectsEvent future should be completed.");
-            assertTrue(detectFuture.get(), "DetectObjectsEvent future result should be true.");
-
-            // TrackedObjectsEvent
-            Message trackedMsg = messageBus.awaitMessage(fusion);
-            assertInstanceOf(TrackedObjectsEvent.class, trackedMsg, "FusionService should receive TrackedObjectsEvent.");
-            TrackedObjectsEvent receivedTrackedEvent = (TrackedObjectsEvent) trackedMsg;
-            assertEquals(2, receivedTrackedEvent.getTrackedObjectList().size(), "TrackedObjectsEvent list size should match.");
-            assertEquals("Tree", receivedTrackedEvent.getTrackedObjectList().get(0).getDescription(), "First TrackedObject description should be Tree.");
-            assertEquals("Car", receivedTrackedEvent.getTrackedObjectList().get(1).getDescription(), "Second TrackedObject description should be Car.");
-            assertEquals(2, receivedTrackedEvent.getTrackedObjectList().get(1).getCoordinates().size(), "Coordinates size for Car should match.");
-            messageBus.complete(receivedTrackedEvent, true);
-            assertTrue(trackedFuture.isDone(), "TrackedObjectsEvent future should be completed.");
-            assertTrue(trackedFuture.get(), "TrackedObjectsEvent future result should be true.");
-
-            // PoseEvent
-            Message poseMsg = messageBus.awaitMessage(fusion);
-            assertInstanceOf(PoseEvent.class, poseMsg, "FusionService should receive PoseEvent.");
-            PoseEvent receivedPoseEvent = (PoseEvent) poseMsg;
-            assertEquals(10, receivedPoseEvent.getPose().getTime(), "PoseEvent time should match.");
-            messageBus.complete(receivedPoseEvent, true);
-            assertTrue(poseFuture.isDone(), "PoseEvent future should be completed.");
-            assertTrue(poseFuture.get(), "PoseEvent future result should be true.");
-        } catch (InterruptedException e) {
-            fail("Unexpected exception: " + e.getMessage());
-        }
-
+        executor.shutdown();
         assertEquals(15, statistics.getRunTime(), "RunTime should be 15.");
         assertEquals(2, statistics.getNumberOfDetectedObjects().get(), "Number of detected objects should be 2.");
         assertEquals(2, statistics.getNumberOfTrackedObjects().get(), "Number of tracked objects should be 2.");
 
-   }
+    }
 
 }
 

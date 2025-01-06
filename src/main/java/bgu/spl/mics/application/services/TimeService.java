@@ -40,12 +40,14 @@ public class TimeService extends MicroService {
     protected void initialize() {
         subscribeEvent(KillTimeEvent.class, (event) -> {
             status = STATUS.DOWN;
-            System.out.println("Finished as intended at time");
+            statistics.setRunTime(currentTick);
+            System.out.println("all services ended processing before their time ended");
             terminate();
 
         });
         subscribeBroadcast(CrahsedBroadCast.class, (broadcast) -> {
             status = STATUS.DOWN;
+            statistics.setRunTime(currentTick);
             System.out.println("Crashed");
             terminate();
         });

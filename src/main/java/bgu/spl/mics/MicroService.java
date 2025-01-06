@@ -1,7 +1,6 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.objects.ERROR;
-import bgu.spl.mics.application.objects.Output;
 import bgu.spl.mics.application.objects.StatisticalFolder;
 
 import java.util.ArrayList;
@@ -34,9 +33,8 @@ public abstract class MicroService implements Runnable {
     private final ConcurrentHashMap<Class<?>, Callback<?>> Messages = new ConcurrentHashMap<>();
     protected final MessageBusImpl bus = MessageBusImpl.getInstance();
     protected final ArrayList<Event<?>> events = new ArrayList<>();
-    protected static ERROR error = ERROR.getInstance();
-    protected static StatisticalFolder statistics = StatisticalFolder.getInstance();
-    protected static Output output = Output.getInstance();
+    protected final static ERROR error = ERROR.getInstance();
+    protected final static StatisticalFolder statistics = StatisticalFolder.getInstance();
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
@@ -185,9 +183,8 @@ public abstract class MicroService implements Runnable {
         bus.unregister(this);
         Thread.currentThread().interrupt();
     }
-    //For unit tests only
-    public ERROR getErrorInstance(){return error;}
-    //For unit tests only
-    public StatisticalFolder getStatisticsInstance(){return statistics;}
+
+   public static ERROR getErrorInstance(){return error;}
+   public static StatisticalFolder getStatisticsInstance(){return statistics;}
 
 }

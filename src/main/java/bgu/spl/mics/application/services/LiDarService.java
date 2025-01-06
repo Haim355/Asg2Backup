@@ -46,12 +46,12 @@ public class LiDarService extends MicroService {
                     error.addLidarFrame(liDarWorkerTracker);
                 }
                 sendBroadcast(new CrahsedBroadCast());
-            }
+            } ///NOAM - the next 2 code block are identical shouldnt we add a private method for them?
             if (liDarWorkerTracker.getStatus() == STATUS.UP) {
                 List<List<TrackedObject>> readyitems = liDarWorkerTracker.ReadyItemsToSend(event.getTime());
                 if (readyitems != null && !readyitems.isEmpty()) {
-                    numOfTrackedObjects += readyitems.size();
                     for (List<TrackedObject> list : readyitems) {
+                        numOfTrackedObjects += list.size();
                         sendEvent(new TrackedObjectsEvent(this.getName(), list));
                     }
                 }
@@ -61,8 +61,8 @@ public class LiDarService extends MicroService {
             if (liDarWorkerTracker.getStatus() == STATUS.UP) {
                 List<List<TrackedObject>> readyitems = liDarWorkerTracker.ReadyItemsToSend(broadcast.getTickTime());
                 if (readyitems != null && !readyitems.isEmpty()) {
-                    numOfTrackedObjects += readyitems.size();
                     for (List<TrackedObject> list : readyitems) {
+                        numOfTrackedObjects += list.size();
                         sendEvent(new TrackedObjectsEvent(this.getName(), list));
                     }
                 }
@@ -75,8 +75,10 @@ public class LiDarService extends MicroService {
             }
         });
         subscribeBroadcast(TerminatedBroadcast.class, (broadcast) -> {
-            if (broadcast.getSendermicro() instanceof TimeService)
+            if (broadcast.getSendermicro() instanceof TimeService){
+                statistics.incrementTrackedObjects(numOfTrackedObjects);
                 terminate();
+            }
         });
         subscribeBroadcast(CrahsedBroadCast.class, (broadcast) -> {
             statistics.incrementTrackedObjects(numOfTrackedObjects);

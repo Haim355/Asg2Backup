@@ -27,7 +27,7 @@ public class FusionSlamService extends MicroService {
      */
     public FusionSlamService(FusionSlam fusionSlam) {
         super("FusionSlamService");
-        this.fusionSlam = fusionSlam.getInstance();
+        this.fusionSlam = FusionSlam.getInstance();
     }
 
     /**
@@ -37,12 +37,15 @@ public class FusionSlamService extends MicroService {
      */
     @Override
     protected void initialize() {
+        /// NOAM - why there is no calls to complete(event, true)?
         subscribeEvent(PoseEvent.class, (event) -> {
             fusionSlam.addPose(event.getPose());
+            complete(event, true);
         });
         subscribeEvent(TrackedObjectsEvent.class, (event) -> {
             event.getTrackedObjectList().forEach(trackedObject -> {
                 fusionSlam.addLandMark(trackedObject.getId(), trackedObject.getDescription(), trackedObject.getCoordinates(), trackedObject.getTime());
+                complete(event, true);
             });
     });
         subscribeBroadcast(TerminatedBroadcast.class, ((broadcast) -> {
@@ -52,7 +55,7 @@ public class FusionSlamService extends MicroService {
                 if (fusionSlam.getRunningServices() == 0) {
                     statistics.setNumberOfLandmarks(fusionSlam.getLandMarks().size());
                     sendEvent(new KillTimeEvent(this.getName()));
-                    System.out.println("Number of objects " + fusionSlam.getLandMarks().size());
+                    System.out.println("Number of landmarks " + fusionSlam.getLandMarks().size());
                     for (LandMark landMark: fusionSlam.getLandMarks().values()){
                         System.out.println(landMark.toString());
                     }
@@ -60,7 +63,8 @@ public class FusionSlamService extends MicroService {
                 }
             }
             else{
-               terminate();
+                statistics.setNumberOfLandmarks(fusionSlam.getLandMarks().size());
+                terminate();
             }
         }));
             subscribeBroadcast(CrahsedBroadCast.class, (broadCast) -> {

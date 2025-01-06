@@ -108,8 +108,21 @@
                     "description": "A Blue Chair with wooden legs"
                 },
                 {
+                    "id": "ERROR",
+                    "description": "GLaDOS has repurposed the robot to conduct endless cake-fetching tests. Success is a lie."
+                },
+                {
                     "id": "furniture_3",
                     "description": "Bed"
+                }
+            ]
+        },
+        {
+            "time": 9,
+            "detectedObjects": [
+                {
+                    "id": "Bin",
+                    "description": "A bin"
                 }
             ]
         },
@@ -118,6 +131,10 @@
             "detectedObjects": [
                 {
                     "id": "Wall_3",
+                    "description": "Wall"
+                },
+                {
+                    "id": "Wall_4",
                     "description": "Wall"
                 }
             ]
@@ -364,5 +381,5 @@
             "detectedObjects": [
             ]
         }
-   ]
+    ]
 }
