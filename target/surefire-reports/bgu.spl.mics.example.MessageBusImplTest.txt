@@ -1,4 +1,16 @@
 -------------------------------------------------------------------------------
 Test set: bgu.spl.mics.example.MessageBusImplTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in bgu.spl.mics.example.MessageBusImplTest
+Tests run: 6, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 5.094 s <<< FAILURE! -- in bgu.spl.mics.example.MessageBusImplTest
+bgu.spl.mics.example.MessageBusImplTest.testAllEventTypesAndShutdown -- Time elapsed: 5.018 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: RunTime should be 15. ==> expected: <15> but was: <0>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:563)
+	at bgu.spl.mics.example.MessageBusImplTest.testAllEventTypesAndShutdown(MessageBusImplTest.java:241)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+
