@@ -36,6 +36,21 @@ public class LiDarService extends MicroService {
      */
     @Override
     protected void initialize() {
+        subscribeBroadcast(TerminatedBroadcast.class, (broadcast) -> {
+            if (broadcast.getSendermicro() instanceof TimeService){
+                statistics.incrementTrackedObjects(numOfTrackedObjects);
+                terminate();
+            }
+        });
+        subscribeBroadcast(CrahsedBroadCast.class, (broadcast) -> {
+            statistics.incrementTrackedObjects(numOfTrackedObjects);
+            error.addLidarFrame(liDarWorkerTracker);
+            terminate();
+        });
+        subscribeEvent(FalsePositiveEvent.class,
+                (event)->{
+                    liDarWorkerTracker.falsePositiveHandeling();
+                });
         subscribeEvent(DetectObjectsEvent.class, (event) -> {
             liDarWorkerTracker.UpdateTrackedObject(event.getDetectedObject(), event.getTime());
             complete(event, true);
@@ -74,20 +89,5 @@ public class LiDarService extends MicroService {
                 terminate();
             }
         });
-        subscribeBroadcast(TerminatedBroadcast.class, (broadcast) -> {
-            if (broadcast.getSendermicro() instanceof TimeService){
-                statistics.incrementTrackedObjects(numOfTrackedObjects);
-                terminate();
-            }
-        });
-        subscribeBroadcast(CrahsedBroadCast.class, (broadcast) -> {
-            statistics.incrementTrackedObjects(numOfTrackedObjects);
-            error.addLidarFrame(liDarWorkerTracker);
-            terminate();
-        });
-        subscribeEvent(FalsePositiveEvent.class,
-                (event)->{
-                    liDarWorkerTracker.falsePositiveHandeling();
-                });
     }
 }
