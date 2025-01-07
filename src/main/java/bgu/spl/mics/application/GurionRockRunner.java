@@ -179,8 +179,8 @@ public class GurionRockRunner {
         OutputData outputData = OutputData.getInstance();
 
         outputData.setSystemRuntime(stats.getRunTime());
-        outputData.setNumDetectedObjects(stats.getNumberOfDetectedObjects().get());
-        outputData.setNumTrackedObjects(stats.getNumberOfTrackedObjects().get());
+        outputData.setNumDetectedObjects(stats.getNumberOfDetectedObjects());
+        outputData.setNumTrackedObjects(stats.getNumberOfTrackedObjects());
         outputData.setNumLandmarks(stats.getNumberOfLandmarks());
         outputData.setLandMarks((Map<String, LandMark>) fusionSlam.getLandMarks());
 

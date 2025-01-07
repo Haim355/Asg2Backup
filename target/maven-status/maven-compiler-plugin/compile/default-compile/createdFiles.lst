@@ -21,14 +21,11 @@ bgu/spl/mics/application/messages/CrahsedBroadCast.class
 bgu/spl/mics/application/objects/LandMark.class
 bgu/spl/mics/application/messages/FalsePositiveEvent.class
 bgu/spl/mics/Callback.class
-bgu/spl/mics/application/objects/Output$OutputHolder.class
 bgu/spl/mics/application/services/CameraService.class
-bgu/spl/mics/application/objects/Output.class
 bgu/spl/mics/application/messages/TrackedObjectsEvent.class
 bgu/spl/mics/application/objects/FusionSlam.class
 bgu/spl/mics/application/GurionRockRunner.class
 bgu/spl/mics/example/services/ExampleEventHandlerService.class
-bgu/spl/mics/application/objects/CameraConfig.class
 bgu/spl/mics/application/objects/LiDarDataBase.class
 bgu/spl/mics/application/objects/LastFrames.class
 bgu/spl/mics/application/objects/ERROR.class
@@ -37,7 +34,6 @@ bgu/spl/mics/example/messages/ExampleEvent.class
 bgu/spl/mics/example/ExampleManager.class
 bgu/spl/mics/MessageBusImpl$MessageBusHolder.class
 bgu/spl/mics/MessageBusImpl$1.class
-bgu/spl/mics/application/objects/Configuration.class
 bgu/spl/mics/MessageBus.class
 bgu/spl/mics/application/objects/ERROR$ErrorHolder.class
 bgu/spl/mics/application/messages/PoseEvent.class
@@ -45,13 +41,11 @@ bgu/spl/mics/example/services/ExampleMessageSenderService.class
 bgu/spl/mics/Message.class
 bgu/spl/mics/application/messages/KillTimeEvent.class
 bgu/spl/mics/application/messages/TerminatedBroadcast.class
-bgu/spl/mics/application/objects/CameraJsonDeserializer$1.class
 bgu/spl/mics/application/objects/DetectedObject.class
 bgu/spl/mics/application/objects/StatisticalFolder.class
 bgu/spl/mics/application/objects/LiDarDataBase$LidarDataBaseHolder.class
 bgu/spl/mics/Broadcast.class
 bgu/spl/mics/application/objects/STATUS.class
-bgu/spl/mics/application/objects/CameraJsonDeserializer.class
 bgu/spl/mics/Future.class
 bgu/spl/mics/application/objects/Camera.class
 bgu/spl/mics/application/services/TimeService.class

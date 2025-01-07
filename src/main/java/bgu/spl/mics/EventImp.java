@@ -16,7 +16,7 @@ public class EventImp<T> implements Event<T> {
     public void resolveFuture(T result) {
         future.resolve(result);
     }
-
+    public boolean isDone (){return future.isDone();}
     public Event<T> currentEvent() {
         return this;
     }

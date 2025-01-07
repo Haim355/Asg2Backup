@@ -9,6 +9,12 @@ package bgu.spl.mics;
  * You must not alter any of the given methods of this interface. 
  * You cannot add methods to this interface.
  */
+/*@ INV: 1. for each (MicroService m: subscribers.keySet()) subscribers.get(m) != null;
+         2. for each (<Class<? extends Message> mes: messageHandlerMap.keySet()) {
+                    for each (MicroService ser: messageHandlerMap.get(m)) ser != null };
+         3. messageHandlerMap.keySet() == messageRoundRobin.keySet();
+         4. All data structures are thread-safe
+* */
 public interface MessageBus {
 
     /**
@@ -18,6 +24,10 @@ public interface MessageBus {
      * @param type The type to subscribe to,
      * @param m    The subscribing micro-service.
      */
+    /*
+    preConditions: type != null && m != null && m is registered
+    postCondition: pre(messageHandlersMap.get(e).size()) + 1 = post(messageHandlersMap.get(e).size())
+    */
     <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m);
 
     /**
@@ -25,6 +35,10 @@ public interface MessageBus {
      * <p>
      * @param type 	The type to subscribe to.
      * @param m    	The subscribing micro-service.
+     */
+    /*
+     preConditions: type != null && m != null && m is registered
+     postCondition:  postCondition: pre(messageHandlersMap.get(e).size()) + 1 = post(messageHandlersMap.get(e).size())
      */
     void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m);
 
@@ -38,6 +52,10 @@ public interface MessageBus {
      * @param e      The completed event.
      * @param result The resolved result of the completed event.
      */
+    /*
+     preConditions: e != null
+     postCondition:  e.isDone() == true
+     */
     <T> void complete(Event<T> e, T result);
 
     /**
@@ -45,6 +63,10 @@ public interface MessageBus {
      * micro-services subscribed to {@code b.getClass()}.
      * <p>
      * @param b 	The message to added to the queues.
+     */
+       /*
+     preConditions: b != null && messageHandlersMap.get(b) != null && messageHandlersMap.get(b).size() > 0
+     postCondition:  for (LinkedBlockingQueue<Message> q: subscribers.values()) {pre(q.size()) + 1 == post(q.size())}
      */
     void sendBroadcast(Broadcast b);
 
@@ -58,12 +80,23 @@ public interface MessageBus {
      * @return {@link Future<T>} object to be resolved once the processing is complete,
      * 	       null in case no micro-service has subscribed to {@code e.getClass()}.
      */
+    /*
+     preConditions: e != null && e.getFuture() == null
+     postCondition:  pre(messageHandlersMap.get(e) != null && messageHandlersMap.get(e).size() > 0) ?
+                     the event entered the queue in subscribers which corresponds to the correct MicroService
+                     according to messageRoundRobin entry which indicates which instance should get the message.
+     postCondition: e.getFuture() != null
+    */
     <T> Future<T> sendEvent(Event<T> e);
 
     /**
      * Allocates a message-queue for the {@link MicroService} {@code m}.
      * <p>
      * @param m the micro-service to create a queue for.
+     */
+       /*
+     preConditions: m != null && m is registered && subscribers.get(m) == null
+     postCondition: subscribers.get(m) != null && subscribers.get(m).isEmpty() == true
      */
     void register(MicroService m);
 
@@ -74,6 +107,10 @@ public interface MessageBus {
      * registered, nothing should happen.
      * <p>
      * @param m the micro-service to unregister.
+     */
+       /*
+     preConditions:  m != null && m is registered
+     postCondition: for (List<MicroService> lst: messageHandlersMap.values()) {lst.isEmpty()}
      */
     void unregister(MicroService m);
 
@@ -91,6 +128,10 @@ public interface MessageBus {
      * @return The next message in the {@code m}'s queue (blocking).
      * @throws InterruptedException if interrupted while waiting for a message
      *                              to became available.
+     */
+       /*
+     preConditions: m != null && m is registered
+     postCondition: pre(subscribers.get(m).size()) - 1 == post(subscribers.get(m).size())
      */
     Message awaitMessage(MicroService m) throws InterruptedException;
     

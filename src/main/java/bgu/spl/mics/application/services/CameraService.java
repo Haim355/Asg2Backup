@@ -39,16 +39,16 @@ public class CameraService extends MicroService {
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class
                 , (broadcast) -> {
+
                     if (camera.getStatus() == STATUS.UP) {
                         StampedDetectedObjects detList = camera.getStampedByTime(broadcast.getTickTime() - camera.getFrequency());
                       if (camera.getStatus() == STATUS.ERROR) {
-                           if (error.setTime(broadcast.getTickTime() - camera.getFrequency()) ) {
-                                error.setMessage(camera.getErrorMessage());
-                                error.addFaultySensor(getName());
-                                error.addCameraFrame(camera);
-                            }
-                            statistics.incrementDetectedObjects(numberofsentitems);
-                            sendBroadcast(new CrahsedBroadCast());
+                          error.setTime(broadcast.getTickTime());
+                          error.setErrorMessage(camera.getErrorMessage());
+                          error.addFaultySensor(getName());
+                          error.addCameraFrame(camera);
+                          statistics.incrementDetectedObjects(numberofsentitems);
+                          sendBroadcast(new CrahsedBroadCast());
                         }
                         if (detList != null && !detList.isEmpty()) {
                             numberofsentitems += detList.getDetectedObjects().size();

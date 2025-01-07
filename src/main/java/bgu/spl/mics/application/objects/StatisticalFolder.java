@@ -35,8 +35,8 @@ public class StatisticalFolder {
         StatHolder.instance.runTime = 0;
     }
     public int getRunTime() {return runTime;}
-    public AtomicInteger getNumberOfDetectedObjects() {return numberOfDetectedObjects;}
-    public AtomicInteger getNumberOfTrackedObjects() {return numberOfTrackedObjects;}
+    public int getNumberOfDetectedObjects() {return numberOfDetectedObjects.get();}
+    public int getNumberOfTrackedObjects() {return numberOfTrackedObjects.get();}
     public int getNumberOfLandmarks() {return numberOfLandmarks;}
     public void setRunTime(int runTime) {this.runTime = runTime;}
     public void setNumberOfDetectedObjects(int numberOfDetectedObjects) {

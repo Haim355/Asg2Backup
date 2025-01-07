@@ -10,10 +10,18 @@ public class LastFrames {
       this.lastCameraFrames = new ConcurrentHashMap<>();
       this.lastLidarFrames = new ConcurrentHashMap<>();
     }
-    public void addCameraFrame(int id, StampedDetectedObjects detObj){
+    public ConcurrentHashMap< Integer, StampedDetectedObjects> getLastCameraFrames(){
+        return lastCameraFrames;
+    }
+
+    public ConcurrentHashMap< Integer, List<TrackedObject>> getLastLidarFrames(){
+        return lastLidarFrames;
+    }
+    public void setLastCameraFrame(int id, StampedDetectedObjects detObj){
         lastCameraFrames.put(id , detObj);
     }
-    public void addLidarFrame(int id, List<TrackedObject> obj){
+
+    public void setLastLidarFrame(int id, List<TrackedObject> obj){
         lastLidarFrames.put(id , obj);
     }
 

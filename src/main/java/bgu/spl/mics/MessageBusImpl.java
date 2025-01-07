@@ -12,12 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Only one public method (in addition to getters which can be public solely for unit testing) may be added to this class
  * All other methods and members you add the class must be private.
  */
-/*@ INV: 1. for each (MicroService m: subscribers.keySet()) subscribers.get(m) != null;
-         2. for each (<Class<? extends Message> mes: messageHandlerMap.keySet()) {
-                    for each (MicroService ser: messageHandlerMap.get(m)) ser != null };
-         3. messageHandlerMap.keySet() == messageRoundRobin.keySet();
-         4. All data structures are thread-safe
-* */
+
 public class MessageBusImpl implements MessageBus {
     private final ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> subscribers = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Class<? extends Message>, List<MicroService>> messageHandlersMap = new ConcurrentHashMap<>();
@@ -145,6 +140,9 @@ public class MessageBusImpl implements MessageBus {
         return services.get(index.get() % services.size());
     }
     // Only for unit testing
-    public ConcurrentHashMap getSubscribers (){return subscribers;}
-
+    public ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> getSubscribers (){return subscribers;}
+    //Only for unit testing
+    public int getRoundRobinIndexByService(Class< ? extends Message> m){
+        return messageRoundRobin.get(m).get();
+    }
 }
