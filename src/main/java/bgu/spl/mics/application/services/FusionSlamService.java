@@ -37,7 +37,6 @@ public class FusionSlamService extends MicroService {
      */
     @Override
     protected void initialize() {
-        /// NOAM - why there is no calls to complete(event, true)?
         subscribeEvent(PoseEvent.class, (event) -> {
             fusionSlam.addPose(event.getPose());
             complete(event, true);

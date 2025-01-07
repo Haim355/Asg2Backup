@@ -49,18 +49,18 @@ public class CameraService extends MicroService {
                           error.addCameraFrame(camera);
                           statistics.incrementDetectedObjects(numberofsentitems);
                           sendBroadcast(new CrahsedBroadCast());
+                          terminate();
                         }
                         if (detList != null && !detList.isEmpty()) {
                             numberofsentitems += detList.getDetectedObjects().size();
                             sendEvent(new DetectObjectsEvent(this.getName(), detList.getDetectedObjects(), broadcast.getTickTime() - camera.getFrequency()));
                         }
-
                         if(detList != null) {
                             if (detList.isEmpty()) {
                                 sendEvent(new FalsePositiveEvent(this.getName()));
                             }
                         }
-                    } else {// if camera.status != STATUS.UP
+                    } else {
                         statistics.incrementDetectedObjects(numberofsentitems);
                         sendBroadcast(new TerminatedBroadcast(this));
                         terminate();

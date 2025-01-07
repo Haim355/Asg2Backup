@@ -1,5 +1,8 @@
 {
-  "systemRuntime22numDetectedObjects13numTrackedObjects13numLandmarks": 7,
+  "systemRuntime": 22,
+  "numDetectedObjects": 13,
+  "numTrackedObjects": 13,
+  "numLandmarks": 7,
   "landMarks": {
     "Wall_4": {
       "id": "Wall_4",
