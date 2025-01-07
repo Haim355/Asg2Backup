@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class LiDarService extends MicroService {
     private final LiDarWorkerTracker liDarWorkerTracker;
-    private int numOfTrackedObjects;
     /**
      * Constructor for LiDarService.
      *
@@ -38,12 +37,13 @@ public class LiDarService extends MicroService {
     protected void initialize() {
         subscribeBroadcast(TerminatedBroadcast.class, (broadcast) -> {
             if (broadcast.getSendermicro() instanceof TimeService){
-                statistics.incrementTrackedObjects(numOfTrackedObjects);
+                statistics.incrementTrackedObjects(liDarWorkerTracker.getNumberOfTrackedObject());
                 terminate();
             }
         });
         subscribeBroadcast(CrahsedBroadCast.class, (broadcast) -> {
-            statistics.incrementTrackedObjects(numOfTrackedObjects);
+            System.out.println("firstPrint: " + liDarWorkerTracker.getNumberOfTrackedObject());
+            statistics.incrementTrackedObjects(liDarWorkerTracker.getNumberOfTrackedObject());
             error.addLidarFrame(liDarWorkerTracker);
             terminate();
         });
@@ -59,15 +59,15 @@ public class LiDarService extends MicroService {
                 error.setErrorMessage(this.liDarWorkerTracker.getErrorMessage());
                 error.addFaultySensor(getName());
                 error.addLidarFrame(liDarWorkerTracker);
+                statistics.incrementTrackedObjects(liDarWorkerTracker.getNumberOfTrackedObject());
                 sendBroadcast(new CrahsedBroadCast());
                 terminate();
             } ///NOAM - the next 2 code block are identical shouldnt we add a private method for them?
-            if (liDarWorkerTracker.getStatus() == STATUS.UP) {
+            else if (liDarWorkerTracker.getStatus() == STATUS.UP) {
                 List<List<TrackedObject>> readyitems = liDarWorkerTracker.ReadyItemsToSend(event.getTime());
                 if (readyitems != null && !readyitems.isEmpty()) {
                     for (List<TrackedObject> list : readyitems) {
-                        numOfTrackedObjects += list.size();
-                        sendEvent(new TrackedObjectsEvent(this.getName(), list));
+                       sendEvent(new TrackedObjectsEvent(this.getName(), list));
                     }
                 }
             }
@@ -77,14 +77,13 @@ public class LiDarService extends MicroService {
                 List<List<TrackedObject>> readyitems = liDarWorkerTracker.ReadyItemsToSend(broadcast.getTickTime());
                 if (readyitems != null && !readyitems.isEmpty()) {
                     for (List<TrackedObject> list : readyitems) {
-                        numOfTrackedObjects += list.size();
-                        sendEvent(new TrackedObjectsEvent(this.getName(), list));
+                       sendEvent(new TrackedObjectsEvent(this.getName(), list));
                     }
                 }
                 liDarWorkerTracker.setState();
             }
             if (liDarWorkerTracker.getStatus() == STATUS.DOWN) {
-                statistics.incrementTrackedObjects(numOfTrackedObjects);
+                statistics.incrementTrackedObjects(liDarWorkerTracker.getNumberOfTrackedObject());
                 sendBroadcast(new TerminatedBroadcast(this));
                 terminate();
             }
