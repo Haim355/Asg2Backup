@@ -192,11 +192,21 @@ public class GurionRockRunner {
                 .create();
 
         String jsonOutput = gson.toJson(outputData);
-       try (FileWriter writer = new FileWriter("output_file.json")) {
-            writer.write(jsonOutput);
-            System.out.println("JSON output saved to: output_file.json");
-        } catch (IOException e) {
-            System.err.println("Error writing JSON file: " + e.getMessage());
+        if (error.getErrorDescription().equals("")) {
+            try (FileWriter writer = new FileWriter("output_file.json")) {
+                writer.write(jsonOutput);
+                System.out.println("JSON output saved to: output_file.json");
+            } catch (IOException e) {
+                System.err.println("Error writing JSON file: " + e.getMessage());
+            }
+        }
+        else {
+            try (FileWriter writer = new FileWriter("error_output_file.json")) {
+                writer.write(jsonOutput);
+                System.out.println("JSON output saved to: error_output_file.json");
+            } catch (IOException e) {
+                System.err.println("Error writing JSON file: " + e.getMessage());
+            }
         }
 
     }

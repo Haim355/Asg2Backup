@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="bgu.spl.mics.application.objects.CameraTest" time="0.072" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="bgu.spl.mics.application.objects.CameraTest" time="0.094" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="gnome"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -17,7 +17,7 @@
     <property name="user.country" value="IL"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
-    <property name="sun.java.command" value="/home/haim/Asg2Backup/target/surefire/surefirebooter-20250107194628795_3.jar /home/haim/Asg2Backup/target/surefire 2025-01-07T19-46-28_454-jvmRun1 surefire-20250107194628795_1tmp surefire_0-20250107194628795_2tmp"/>
+    <property name="sun.java.command" value="/home/haim/Asg2Backup/target/surefire/surefirebooter-20250107221651082_3.jar /home/haim/Asg2Backup/target/surefire 2025-01-07T22-16-50_768-jvmRun1 surefire-20250107221651082_1tmp surefire_0-20250107221651082_2tmp"/>
     <property name="surefire.test.class.path" value="/home/haim/Asg2Backup/target/test-classes:/home/haim/Asg2Backup/target/classes:/home/haim/.m2/repository/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar:/home/haim/.m2/repository/com/google/errorprone/error_prone_annotations/2.27.0/error_prone_annotations-2.27.0.jar:/home/haim/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.4/junit-jupiter-api-5.11.4.jar:/home/haim/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/haim/.m2/repository/org/junit/platform/junit-platform-commons/1.11.4/junit-platform-commons-1.11.4.jar:/home/haim/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/haim/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.11.4/junit-jupiter-engine-5.11.4.jar:/home/haim/.m2/repository/org/junit/platform/junit-platform-engine/1.11.4/junit-platform-engine-1.11.4.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/home/haim"/>
@@ -30,7 +30,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="/home/haim/Asg2Backup/target/surefire/surefirebooter-20250107194628795_3.jar"/>
+    <property name="surefire.real.class.path" value="/home/haim/Asg2Backup/target/surefire/surefirebooter-20250107221651082_3.jar"/>
     <property name="sun.boot.class.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="1.8.0_432-8u432-ga~us1-0ubuntu2~20.04-ga"/>
@@ -59,6 +59,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="52.0"/>
   </properties>
-  <testcase name="testGetStampedByTime_ValidTimeAndObjectExists" classname="bgu.spl.mics.application.objects.CameraTest" time="0.024"/>
-  <testcase name="testGetStampedByTime_ErrorAtfirstObject" classname="bgu.spl.mics.application.objects.CameraTest" time="0.002"/>
+  <testcase name="testGetStampedByTime_ValidTimeAndObjectExists" classname="bgu.spl.mics.application.objects.CameraTest" time="0.034"/>
+  <testcase name="testGetStampedByTime_ErrorAtfirstObject" classname="bgu.spl.mics.application.objects.CameraTest" time="0.003"/>
 </testsuite>

@@ -30,7 +30,6 @@
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/MessageBusImpl.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/services/PoseService.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/services/CameraService.java
-/home/haim/Asg2Backup/src/main/java/bgu/spl/mics/parserClasses/OutputData.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/messages/TrackedObjectsEvent.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/messages/TerminatedBroadcast.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/parserClasses/ErrorOutput.java
@@ -46,6 +45,5 @@
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/example/ExampleManager.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/messages/DetectObjectsEvent.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/parserClasses/Configuration.java
-/home/haim/Asg2Backup/src/main/java/bgu/spl/mics/parserClasses/OutputSerializer.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/objects/CloudPoint.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/messages/CrahsedBroadCast.java

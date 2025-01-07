@@ -107,7 +107,7 @@ public class Camera {
         if (time >= 0) {
             CheckError();
             StampedDetectedObjects curr = null;
-            if (time == next.getTime()) {
+            if ( next != null && time == next.getTime()) {
                 if(getStatus() == STATUS.ERROR){
                     return next;
                 }

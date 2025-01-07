@@ -25,6 +25,7 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
             Map <Integer , StampedDetectedObjects> detMap = lf.getLastCameraFrames();
             for (int id: detMap.keySet()){
                 JsonObject stObj = new JsonObject();
+                JsonArray stArrObj = new JsonArray();
                 StampedDetectedObjects temp = detMap.get(id);
                 stObj.addProperty("time: ",temp.getTime());
                 List<DetectedObject> detTemp = temp.getDetectedObjects();
@@ -32,8 +33,9 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                     JsonObject detObj = new JsonObject();
                     detObj.addProperty("id: ", obj.getId());
                     detObj.addProperty("description:", obj.getDescription());
-                    stObj.add("",detObj);
+                    stArrObj.add(detObj);
                 }
+                stObj.add("detected objects", stArrObj);
                 camerasFrames.add("Camera" + id,stObj );
             }
             JsonObject lastFramesObject = new JsonObject();
@@ -49,13 +51,13 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                     trackedObj.addProperty("id", obj.getId());
                     trackedObj.addProperty("time ", obj.getTime());
                     trackedObj.addProperty("description", obj.getDescription());
-                    JsonObject jsonLstCp = new JsonObject();
+                    JsonArray jsonLstCp = new JsonArray();
                     List<CloudPoint> lstCp = obj.getCoordinates();
                     for (CloudPoint cp : lstCp) {
                         JsonObject cpObj = new JsonObject();
                         cpObj.addProperty("x", cp.getX());
                         cpObj.addProperty("y", cp.getY());
-                        jsonLstCp.add("", cpObj);
+                        jsonLstCp.add(cpObj);
                     }
                     trackedObj.add("coordinates", jsonLstCp);
                     trackedList.add("",trackedObj);
