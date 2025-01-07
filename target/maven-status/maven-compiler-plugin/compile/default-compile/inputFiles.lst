@@ -16,6 +16,7 @@
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/MicroService.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/example/services/ExampleEventHandlerService.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/example/services/ExampleBroadcastListenerService.java
+/home/haim/Asg2Backup/src/main/java/bgu/spl/mics/parserClasses/ErrorOutputSerializer.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/GurionRockRunner.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/objects/Camera.java
 /home/haim/Asg2Backup/src/main/java/bgu/spl/mics/application/objects/TrackedObject.java

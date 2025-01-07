@@ -3,7 +3,6 @@ package bgu.spl.mics.application.objects;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * LiDarWorkerTracker is responsible for managing a LiDAR worker.
@@ -48,7 +47,7 @@ public class LiDarWorkerTracker {
         return ErrorMessage;
     }
 
-    public int getNumberOfTrackedObject(){return numberOfTrackedObject;}
+    public int numOfSentEvents(){return numberOfTrackedObject;}
 
     public void setLidarDataBase(LiDarDataBase data) {
         this.dataBase = data;
@@ -78,7 +77,6 @@ public class LiDarWorkerTracker {
     public void UpdateTrackedObject(List<DetectedObject> detObjs, int time) {
         List<StampedCloudPoints> cloudPoints = dataBase.getCloudPoints();
         List<TrackedObject> trackedObjs = new ArrayList<>();
-
         for (DetectedObject obj : detObjs) {
             ArrayList<CloudPoint> cpArr = new ArrayList<>(getCloudPointsByTime(cloudPoints, time, obj.getId()));
             if (status == STATUS.ERROR) {
@@ -92,9 +90,11 @@ public class LiDarWorkerTracker {
             );
             trackedObjs.add(temp);
         }
-        numberOfTrackedObject += trackedObjs.size();
-        lastTrackedObjects = trackedObjs;
-        helditmes.add(trackedObjs);
+        if (!trackedObjs.isEmpty() && status != STATUS.ERROR) { //added here 13:03
+            numberOfTrackedObject += trackedObjs.size();
+            lastTrackedObjects = trackedObjs;
+            helditmes.add(trackedObjs);
+        }
     }
 
     public List<List<TrackedObject>> ReadyItemsToSend(int time) {

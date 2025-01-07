@@ -123,22 +123,17 @@ public class MessageBusImpl implements MessageBus {
     public Message awaitMessage(MicroService m) throws InterruptedException {
         return subscribers.get(m).take();
     }
-
     public static MessageBusImpl getInstance() {
         return MessageBusHolder.instance;
     }
+
     //Only for unit tests
     public synchronized void clearInstance() {
         MessageBusHolder.instance.messageHandlersMap.clear();
         MessageBusHolder.instance.subscribers.clear();
         MessageBusHolder.instance.messageRoundRobin.clear();
     }
-    //Only for unit testing
-    public MicroService getHandlerByMessage(Class< ? extends Message> event) {
-        List<MicroService> services = messageHandlersMap.get(event.getClass());
-        AtomicInteger index = messageRoundRobin.get(event.getClass());
-        return services.get(index.get() % services.size());
-    }
+
     // Only for unit testing
     public ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> getSubscribers (){return subscribers;}
     //Only for unit testing

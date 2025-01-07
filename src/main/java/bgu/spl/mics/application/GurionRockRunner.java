@@ -3,8 +3,8 @@ package bgu.spl.mics.application;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
-import bgu.spl.mics.parserClasses.OutputData;
-import bgu.spl.mics.parserClasses.OutputSerializer;
+import bgu.spl.mics.parserClasses.ErrorOutput;
+import bgu.spl.mics.parserClasses.ErrorOutputSerializer;
 import com.google.gson.*;
 
 import java.io.FileNotFoundException;
@@ -145,7 +145,6 @@ public class GurionRockRunner {
 
         //*********************** FusionSlam and Statistics ******************************//
         FusionSlam fusionSlam = FusionSlam.getInstance();
-        ///NOAM - the +1 is for timeService? no need to count poseService and FusionSlamService?
         fusionSlam.setNumberOfNumberOfServices(lidarServices.size() + cameraServices.size() + 1);
         FusionSlamService fusionSlamService = new FusionSlamService(fusionSlam);
 
@@ -174,25 +173,26 @@ public class GurionRockRunner {
             Thread.currentThread().interrupt();
         }
         //*********************** Parsing output file ******************************//
+        ErrorOutput outputData = ErrorOutput.getInstance();
+        ERROR error = MicroService.getErrorInstance();
+        if (!error.getErrorDescription().equals("")){
+            outputData.setError(error);
+        }
         StatisticalFolder stats = MicroService.getStatisticsInstance();
+        System.out.println(error.toString());
         System.out.println(stats.toString());
-        OutputData outputData = OutputData.getInstance();
-
-        outputData.setSystemRuntime(stats.getRunTime());
-        outputData.setNumDetectedObjects(stats.getNumberOfDetectedObjects());
-        outputData.setNumTrackedObjects(stats.getNumberOfTrackedObjects());
-        outputData.setNumLandmarks(stats.getNumberOfLandmarks());
+        outputData.setStats(stats);
         outputData.setLandMarks((Map<String, LandMark>) fusionSlam.getLandMarks());
 
-        // Create Gson with custom serializer
+
+
         gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(OutputData.class, new OutputSerializer())
+                .registerTypeAdapter(ErrorOutput.class, new ErrorOutputSerializer())
                 .create();
 
         String jsonOutput = gson.toJson(outputData);
-
-        try (FileWriter writer = new FileWriter("output_file.json")) {
+       try (FileWriter writer = new FileWriter("output_file.json")) {
             writer.write(jsonOutput);
             System.out.println("JSON output saved to: output_file.json");
         } catch (IOException e) {

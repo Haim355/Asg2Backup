@@ -41,14 +41,11 @@ public class TimeService extends MicroService {
         subscribeEvent(KillTimeEvent.class, (event) -> {
             status = STATUS.DOWN;
             statistics.setRunTime(currentTick);
-            System.out.println("all services ended processing before their time ended");
             terminate();
-
         });
         subscribeBroadcast(CrahsedBroadCast.class, (broadcast) -> {
             status = STATUS.DOWN;
             statistics.setRunTime(currentTick);
-            System.out.println("Crashed");
             terminate();
         });
         subscribeBroadcast(TickBroadcast.class, (broadcast) -> {
@@ -62,17 +59,12 @@ public class TimeService extends MicroService {
                 sendBroadcast(new TickBroadcast(currentTick));
 
             } else {
+                sendBroadcast(new TerminatedBroadcast(this));
                 status = STATUS.DOWN;
                 statistics.setRunTime(currentTick);
-                sendBroadcast(new TerminatedBroadcast(this));
-                System.out.println("Ended Duration");
                 terminate();
             }
         });
         sendBroadcast(new TickBroadcast(currentTick));
     }
-    /// For unit test only
-    public void incrementCurrentTick() {this.currentTick++;}
-    public int getDuration() {return Duration;}
-    public void setStatus(STATUS status) {this.status = status;}
 }

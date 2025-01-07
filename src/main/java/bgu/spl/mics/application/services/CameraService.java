@@ -42,12 +42,12 @@ public class CameraService extends MicroService {
                     if (camera.getStatus() == STATUS.UP) {
                         StampedDetectedObjects detList = camera.getStampedByTime(broadcast.getTickTime() - camera.getFrequency());
                         if (camera.getStatus() == STATUS.ERROR) {
+                            sendBroadcast(new CrahsedBroadCast());
                             error.setTime(broadcast.getTickTime());
                             error.setErrorMessage(camera.getErrorMessage());
                             error.addFaultySensor(getName());
                             error.addCameraFrame(camera);
                             statistics.incrementDetectedObjects(numberofsentitems);
-                            sendBroadcast(new CrahsedBroadCast());
                             terminate();
                         } else if (detList != null && !detList.isEmpty()) {
                             numberofsentitems += detList.getDetectedObjects().size();
@@ -61,8 +61,8 @@ public class CameraService extends MicroService {
                         }
                     }
                     else {
-                        statistics.incrementDetectedObjects(numberofsentitems);
                         sendBroadcast(new TerminatedBroadcast(this));
+                        statistics.incrementDetectedObjects(numberofsentitems);
                         terminate();
                     }
                 });
