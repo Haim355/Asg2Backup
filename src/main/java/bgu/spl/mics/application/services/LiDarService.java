@@ -63,7 +63,7 @@ public class LiDarService extends MicroService {
                 sendBroadcast(new CrahsedBroadCast());
                 terminate();
             } ///NOAM - the next 2 code block are identical shouldnt we add a private method for them?
-            else if (liDarWorkerTracker.getStatus() == STATUS.UP) {
+            if (liDarWorkerTracker.getStatus() == STATUS.UP) {
                 List<List<TrackedObject>> readyitems = liDarWorkerTracker.ReadyItemsToSend(event.getTime());
                 if (readyitems != null && !readyitems.isEmpty()) {
                     for (List<TrackedObject> list : readyitems) {
