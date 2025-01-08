@@ -179,8 +179,6 @@ public class GurionRockRunner {
             outputData.setError(error);
         }
         StatisticalFolder stats = MicroService.getStatisticsInstance();
-        System.out.println(error.toString());
-        System.out.println(stats.toString());
         outputData.setStats(stats);
         outputData.setLandMarks((Map<String, LandMark>) fusionSlam.getLandMarks());
 
