@@ -8,6 +8,7 @@
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/Broadcast.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/application/messages/KillTimeEvent.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/example/services/ExampleMessageSenderService.java
+/home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/parserClasses/ErrorOutputSerializer.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/application/GurionRockRunner.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/Future.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/example/ServiceCreator.java
@@ -41,10 +42,8 @@
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/application/messages/FalsePositiveEvent.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/example/messages/ExampleEvent.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/example/services/ExampleBroadcastListenerService.java
-/home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/parserClasses/OutputSerializer.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/application/objects/StatisticalFolder.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/MicroService.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/application/messages/TickBroadcast.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/EventImp.java
 /home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/application/objects/LandMark.java
-/home/users/bsc/haimoz/Downloads/Asg2Backup/src/main/java/bgu/spl/mics/parserClasses/OutputData.java

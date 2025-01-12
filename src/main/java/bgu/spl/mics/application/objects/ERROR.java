@@ -54,9 +54,12 @@ public class ERROR {
        this.ErrorMessage = errorMessage;
     }
     public void setLastFrames(LastFrames lf){
-        if (lf == null){lastFrames = new LastFrames();}
-        else
+        if (lf == null){
+            lastFrames = new LastFrames();
+        }
+        else{
             lastFrames = lf;
+        }
     }
     public void setFaultySensor(String s) {
         faultySensor = s;
@@ -82,9 +85,9 @@ public class ERROR {
     public synchronized void addCameraFrame(Camera c){
         if (this.lastFrames == null){
             this.lastFrames = new LastFrames();
-        } // NEED TO VERIFY IF TO SUBTRACT C.FREQUENCY
+        }
         StampedDetectedObjects lastFrame = null;
-        if (!c.getErrorMessage().equals("")){//means this is the camera that caused the error
+        if (!c.getErrorMessage().equals("")){
             int counter = c.getCounter();
             if (counter > 0) {
                 lastFrame = c.getDetectedObjects().get(counter - 1);

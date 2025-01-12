@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class LiDarService extends MicroService {
     private final LiDarWorkerTracker liDarWorkerTracker;
-    private int numOfTrackedObjects;
+    private int numOfTrackedObjects = 0;
     /**
      * Constructor for LiDarService.
      *
@@ -40,11 +40,12 @@ public class LiDarService extends MicroService {
             liDarWorkerTracker.UpdateTrackedObject(event.getDetectedObject(), event.getTime());
             complete(event, true);
             if (liDarWorkerTracker.getStatus() == STATUS.ERROR) {
-                error.setTime(event.getTime() - liDarWorkerTracker.getFrequency());
+                sendBroadcast(new CrahsedBroadCast());
+                error.setTime(event.getTime());
                 error.setErrorMessage(this.liDarWorkerTracker.getErrorMessage());
                 error.addFaultySensor(getName());
                 error.addLidarFrame(liDarWorkerTracker);
-                sendBroadcast(new CrahsedBroadCast());
+                statistics.incrementTrackedObjects(numOfTrackedObjects);
                 terminate();
             } ///NOAM - the next 2 code block are identical shouldnt we add a private method for them?
             if (liDarWorkerTracker.getStatus() == STATUS.UP) {
@@ -56,6 +57,7 @@ public class LiDarService extends MicroService {
                     }
                 }
             }
+
         });
         subscribeBroadcast(TickBroadcast.class, (broadcast) -> {
             if (liDarWorkerTracker.getStatus() == STATUS.UP) {
@@ -69,8 +71,8 @@ public class LiDarService extends MicroService {
                 liDarWorkerTracker.setState();
             }
             if (liDarWorkerTracker.getStatus() == STATUS.DOWN) {
-                statistics.incrementTrackedObjects(numOfTrackedObjects);
                 sendBroadcast(new TerminatedBroadcast(this));
+                statistics.incrementTrackedObjects(numOfTrackedObjects);
                 terminate();
             }
         });

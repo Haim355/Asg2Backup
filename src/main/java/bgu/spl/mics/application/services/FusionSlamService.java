@@ -37,7 +37,12 @@ public class FusionSlamService extends MicroService {
      */
     @Override
     protected void initialize() {
-        subscribeEvent(PoseEvent.class, (event) -> {
+        subscribeBroadcast(CrahsedBroadCast.class, (broadCast) -> {
+        statistics.setNumberOfLandmarks(fusionSlam.getLandMarks().size());
+        error.setPoses(fusionSlam.getPoses());
+        terminate();
+    });
+         subscribeEvent(PoseEvent.class, (event) -> {
             fusionSlam.addPose(event.getPose());
             complete(event, true);
         });
@@ -61,15 +66,11 @@ public class FusionSlamService extends MicroService {
                     terminate();
                 }
             }
-            else{
+            else{//in case the sender is timeService
                 statistics.setNumberOfLandmarks(fusionSlam.getLandMarks().size());
                 terminate();
             }
         }));
-            subscribeBroadcast(CrahsedBroadCast.class, (broadCast) -> {
-                statistics.setNumberOfLandmarks(fusionSlam.getLandMarks().size());
-                error.setPoses(fusionSlam.getPoses());
-                terminate();
-            });
+
     }
 }

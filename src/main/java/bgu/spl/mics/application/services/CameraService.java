@@ -27,7 +27,7 @@ public class CameraService extends MicroService {
         super("Camera Id: " + camera.getId());
         this.camera = camera;
         this.timestamps = 0;
-        this.numberofsentitems=0;
+        this.numberofsentitems = 0;
     }
 
     /**
@@ -39,35 +39,35 @@ public class CameraService extends MicroService {
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class
                 , (broadcast) -> {
-
                     if (camera.getStatus() == STATUS.UP) {
                         StampedDetectedObjects detList = camera.getStampedByTime(broadcast.getTickTime() - camera.getFrequency());
-                      if (camera.getStatus() == STATUS.ERROR) {
-                          error.setTime(broadcast.getTickTime());
-                          error.setErrorMessage(camera.getErrorMessage());
-                          error.addFaultySensor(getName());
-                          error.addCameraFrame(camera);
-                          statistics.incrementDetectedObjects(numberofsentitems);
-                          sendBroadcast(new CrahsedBroadCast());
-                          terminate();
-                        }
-                        if (detList != null && !detList.isEmpty()) {
+                        if (camera.getStatus() == STATUS.ERROR) {
+                            sendBroadcast(new CrahsedBroadCast());
+                            error.setTime(broadcast.getTickTime());
+                            error.setErrorMessage(camera.getErrorMessage());
+                            error.addFaultySensor(getName());
+                            error.addCameraFrame(camera);
+                            statistics.incrementDetectedObjects(numberofsentitems);
+                            terminate();
+                        } else if (detList != null && !detList.isEmpty()) {
                             numberofsentitems += detList.getDetectedObjects().size();
                             sendEvent(new DetectObjectsEvent(this.getName(), detList.getDetectedObjects(), broadcast.getTickTime() - camera.getFrequency()));
                         }
-                        if(detList != null) {
+
+                        if (detList != null) {
                             if (detList.isEmpty()) {
                                 sendEvent(new FalsePositiveEvent(this.getName()));
                             }
                         }
-                    } else {
-                        statistics.incrementDetectedObjects(numberofsentitems);
+                    }
+                    else {
                         sendBroadcast(new TerminatedBroadcast(this));
+                        statistics.incrementDetectedObjects(numberofsentitems);
                         terminate();
                     }
                 });
         subscribeBroadcast(TerminatedBroadcast.class, (broadcast) -> {
-            if (broadcast.getSendermicro() instanceof TimeService){
+            if (broadcast.getSendermicro() instanceof TimeService) {
                 statistics.incrementDetectedObjects(numberofsentitems);
                 terminate();
             }
