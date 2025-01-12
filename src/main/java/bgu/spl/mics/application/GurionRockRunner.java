@@ -51,7 +51,8 @@ public class GurionRockRunner {
             System.err.println("Failed to parse configuration file.");
             return;
         }
-
+        int lastSepratorIndex = args[0].lastIndexOf('/');
+        String dirPathString = args[0].substring(0, lastSepratorIndex);
         //*********************** Cameras ******************************//
         JsonObject cams = config.getAsJsonObject("Cameras");
         if (cams == null) {
@@ -59,7 +60,7 @@ public class GurionRockRunner {
             return;
         }
 
-        String cameraDataPath = cams.get("camera_datas_path").getAsString();
+        String cameraDataPath = cams.get("camera_datas_path").getAsString().substring(1) ;
         JsonArray cameraConfigs = cams.getAsJsonArray("CamerasConfigurations");
         if (cameraConfigs == null) {
             System.err.println("Camera configurations are missing.");
@@ -69,7 +70,7 @@ public class GurionRockRunner {
         List<Camera> cameraObjects = new ArrayList<>();
         List<CameraService> cameraServices = new ArrayList<>();
 
-        try (FileReader camDataReader = new FileReader(cameraDataPath)) {
+        try (FileReader camDataReader = new FileReader(dirPathString+cameraDataPath)) {
             JsonObject camData = gson.fromJson(camDataReader, JsonObject.class);
 
             for (JsonElement element : cameraConfigs) {
@@ -104,8 +105,8 @@ public class GurionRockRunner {
             return;
         }
 
-        String lidarDataPath = liDarWorkers.get("lidars_data_path").getAsString();
-        LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarDataPath);
+        String lidarDataPath = liDarWorkers.get("lidars_data_path").getAsString().substring(1);
+        LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(dirPathString+lidarDataPath);
 
         JsonArray lidarConfigs = liDarWorkers.getAsJsonArray("LidarConfigurations");
         List<LiDarWorkerTracker> lidarObjectList = new ArrayList<>();
@@ -123,10 +124,10 @@ public class GurionRockRunner {
         }
 
         //*********************** Poses Setup ******************************//
-        String poseDataPath = config.get("poseJsonFile").getAsString();
+        String poseDataPath = config.get("poseJsonFile").getAsString().substring(1);
         List<Pose> poseList = new ArrayList<>();
 
-        try (FileReader poseReader = new FileReader(poseDataPath)) {
+        try (FileReader poseReader = new FileReader(dirPathString+poseDataPath)) {
             JsonArray poseArray = gson.fromJson(poseReader, JsonArray.class);
             for (JsonElement element : poseArray) {
                 Pose pose = gson.fromJson(element, Pose.class);
@@ -192,7 +193,7 @@ public class GurionRockRunner {
 
         String jsonOutput = gson.toJson(outputData);
 
-        try (FileWriter writer = new FileWriter("output_file.json")) {
+        try (FileWriter writer = new FileWriter(dirPathString+"output_file.json")) {
             writer.write(jsonOutput);
             System.out.println("JSON output saved to: output_file.json");
         } catch (IOException e) {
