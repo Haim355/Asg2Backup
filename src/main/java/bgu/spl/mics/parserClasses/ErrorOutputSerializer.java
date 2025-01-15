@@ -81,13 +81,13 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
 
         // Serialize StatisticalFolder
         if (errorOutput.getStats() != null) {
-            JsonObject statsObject = new JsonObject();
+            
             StatisticalFolder stats = errorOutput.getStats();
-            statsObject.addProperty("runtime:", stats.getRunTime());
-            statsObject.addProperty("numberOfDetectedObjects:", stats.getNumberOfDetectedObjects());
-            statsObject.addProperty("numberOfTrackedObjects:", stats.getNumberOfTrackedObjects());
-            statsObject.addProperty("numberOfLandmarks:", stats.getNumberOfLandmarks());
-            jsonObject.add("stats:", statsObject);
+            jsonObject.addProperty("systemRuntime:", stats.getRunTime());
+            jsonObject.addProperty("numOfDetectedObjects:", stats.getNumberOfDetectedObjects());
+            jsonObject.addProperty("numOfTrackedObjects:", stats.getNumberOfTrackedObjects());
+            jsonObject.addProperty("numOfLandmarks:", stats.getNumberOfLandmarks());
+            
         }
 
         // Serialize LandMarks
