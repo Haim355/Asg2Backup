@@ -25,7 +25,7 @@ public class LiDarService extends MicroService {
      * @param LiDarWorkerTracker A LiDAR Tracker worker object that this service will use to process data.
      */
     public LiDarService(LiDarWorkerTracker LiDarWorkerTracker) {
-        super("Lidar Worker Id: " + LiDarWorkerTracker.getId());
+        super("LiDarTrackerWorker" + LiDarWorkerTracker.getId());
         this.liDarWorkerTracker = LiDarWorkerTracker;
     }
 

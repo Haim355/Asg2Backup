@@ -38,8 +38,8 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                 stObj.add("detected objects", stArrObj);
                 camerasFrames.add("Camera" + id,stObj );
             }
-            JsonObject lastFramesObject = new JsonObject();
-            lastFramesObject.add("Cameras last frames: ",camerasFrames);
+            
+            jsonObject.add("lastCameraFrames",camerasFrames);
 
             JsonObject lidarsFrames = new JsonObject();
             Map <Integer , List<TrackedObject>> lidarsMap = lf.getLastLidarFrames();
@@ -64,8 +64,7 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                 }
                  lidarsFrames.add("LiDarTrackerWorker" + id, trackedList );
             }
-            lastFramesObject.add("LiDar Workers last frames:", lidarsFrames);
-            jsonObject.add("Last Frames: " , lastFramesObject);
+            jsonObject.add("lastLidarFrames", lidarsFrames);
             JsonObject posesObject = new JsonObject();
             List <Pose> poses = error.getPoses();
             for (Pose p: poses){
