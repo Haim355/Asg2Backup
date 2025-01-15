@@ -27,15 +27,15 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                 JsonObject stObj = new JsonObject();
                 JsonArray stArrObj = new JsonArray();
                 StampedDetectedObjects temp = detMap.get(id);
-                stObj.addProperty("time: ",temp.getTime());
+                stObj.addProperty("time:",temp.getTime());
                 List<DetectedObject> detTemp = temp.getDetectedObjects();
                 for (DetectedObject obj: detTemp){
                     JsonObject detObj = new JsonObject();
-                    detObj.addProperty("id: ", obj.getId());
+                    detObj.addProperty("id:", obj.getId());
                     detObj.addProperty("description:", obj.getDescription());
                     stArrObj.add(detObj);
                 }
-                stObj.add("detected objects", stArrObj);
+                stObj.add("detectedObjects", stArrObj);
                 camerasFrames.add("Camera" + id,stObj );
             }
             
@@ -49,7 +49,7 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                 for (TrackedObject obj: temp) {
                     JsonObject trackedObj = new JsonObject();
                     trackedObj.addProperty("id", obj.getId());
-                    trackedObj.addProperty("time ", obj.getTime());
+                    trackedObj.addProperty("time", obj.getTime());
                     trackedObj.addProperty("description", obj.getDescription());
                     JsonArray jsonLstCp = new JsonArray();
                     List<CloudPoint> lstCp = obj.getCoordinates();
@@ -77,16 +77,17 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                 posesArr.add(poseObject);
             }
             jsonObject.add("poses:" , posesArr);
+            
         }
 
-        // Serialize StatisticalFolder
+        JsonObject statLandObj = new JsonObject();
         if (errorOutput.getStats() != null) {
             
             StatisticalFolder stats = errorOutput.getStats();
-            jsonObject.addProperty("systemRuntime:", stats.getRunTime());
-            jsonObject.addProperty("numOfDetectedObjects:", stats.getNumberOfDetectedObjects());
-            jsonObject.addProperty("numOfTrackedObjects:", stats.getNumberOfTrackedObjects());
-            jsonObject.addProperty("numOfLandmarks:", stats.getNumberOfLandmarks());
+            statLandObj.addProperty("systemRuntime:", stats.getRunTime());
+            statLandObj.addProperty("numOfDetectedObjects:", stats.getNumberOfDetectedObjects());
+            statLandObj.addProperty("numOfTrackedObjects:", stats.getNumberOfTrackedObjects());
+            statLandObj.addProperty("numOfLandmarks:", stats.getNumberOfLandmarks());
             
         }
 
@@ -113,10 +114,16 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                 landMarkObject.add("coordinates:", coordinatesArray);
                 landmarksObject.add(key, landMarkObject);
             }
-            jsonObject.add("landMarks", landmarksObject);
+            statLandObj.add("landMarks", landmarksObject);
         }
-
-        return jsonObject;
+        if (errorOutput.getError() != null){
+            jsonObject.add("statistics", statLandObj);
+            return jsonObject;
+        }
+        else {
+            return statLandObj;
+        }
+        
     }
 }
 
