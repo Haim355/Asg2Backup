@@ -84,7 +84,7 @@ public class LiDarWorkerTracker {
             }
             TrackedObject temp = new TrackedObject(
                     obj.getId(),
-                    time + frequency,
+                    time,
                     obj.getDescription(),
                     cpArr
             );
@@ -103,7 +103,7 @@ public class LiDarWorkerTracker {
         while (iterator.hasNext()) {
             List<TrackedObject> track = iterator.next();
             if (!track.isEmpty()) {
-                int stampedTime = track.get(0).getTime();
+                int stampedTime = track.get(0).getTime()+frequency;
                 if (stampedTime <= time) {
                     readyItems.add(track);
                     for (TrackedObject obj : track) {
