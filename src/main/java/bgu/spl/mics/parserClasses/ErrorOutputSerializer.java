@@ -27,12 +27,12 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                 JsonObject stObj = new JsonObject();
                 JsonArray stArrObj = new JsonArray();
                 StampedDetectedObjects temp = detMap.get(id);
-                stObj.addProperty("time:",temp.getTime());
+                stObj.addProperty("time",temp.getTime());
                 List<DetectedObject> detTemp = temp.getDetectedObjects();
                 for (DetectedObject obj: detTemp){
                     JsonObject detObj = new JsonObject();
-                    detObj.addProperty("id:", obj.getId());
-                    detObj.addProperty("description:", obj.getDescription());
+                    detObj.addProperty("id", obj.getId());
+                    detObj.addProperty("description", obj.getDescription());
                     stArrObj.add(detObj);
                 }
                 stObj.add("detectedObjects", stArrObj);
@@ -65,18 +65,17 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                  lidarsFrames.add("LiDarTrackerWorker" + id, trackedList );
             }
             jsonObject.add("lastLidarFrames", lidarsFrames);
-            JsonObject posesObject = new JsonObject();
             List <Pose> poses = error.getPoses();
             JsonArray posesArr = new JsonArray();
                 for (Pose p: poses){
                 JsonObject poseObject = new JsonObject();
-                poseObject.addProperty("time:", p.getTime());
-                poseObject.addProperty("x:", p.getX());
-                poseObject.addProperty("y:", p.getY());
-                poseObject.addProperty("yaw:", p.getYaw());
+                poseObject.addProperty("time", p.getTime());
+                poseObject.addProperty("x", p.getX());
+                poseObject.addProperty("y", p.getY());
+                poseObject.addProperty("yaw", p.getYaw());
                 posesArr.add(poseObject);
             }
-            jsonObject.add("poses:" , posesArr);
+           jsonObject.add("poses" , posesArr);
             
         }
 
@@ -84,10 +83,10 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
         if (errorOutput.getStats() != null) {
             
             StatisticalFolder stats = errorOutput.getStats();
-            statLandObj.addProperty("systemRuntime:", stats.getRunTime());
-            statLandObj.addProperty("numOfDetectedObjects:", stats.getNumberOfDetectedObjects());
-            statLandObj.addProperty("numOfTrackedObjects:", stats.getNumberOfTrackedObjects());
-            statLandObj.addProperty("numOfLandmarks:", stats.getNumberOfLandmarks());
+            statLandObj.addProperty("systemRuntime", stats.getRunTime());
+            statLandObj.addProperty("numOfDetectedObjects", stats.getNumberOfDetectedObjects());
+            statLandObj.addProperty("numOfTrackedObjects", stats.getNumberOfTrackedObjects());
+            statLandObj.addProperty("numOfLandmarks", stats.getNumberOfLandmarks());
             
         }
 
@@ -100,14 +99,14 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
                 LandMark landMark = entry.getValue();
 
                 JsonObject landMarkObject = new JsonObject();
-                landMarkObject.addProperty("id:", landMark.getId());
-                landMarkObject.addProperty("description:", landMark.getDescription());
+                landMarkObject.addProperty("id", landMark.getId());
+                landMarkObject.addProperty("description", landMark.getDescription());
 
                 JsonArray coordinatesArray = new JsonArray();
                 landMark.getCoordinates().forEach(coordinate -> {
                     JsonObject coordinateObject = new JsonObject();
-                    coordinateObject.addProperty("x:", coordinate.getX());
-                    coordinateObject.addProperty("y:", coordinate.getY());
+                    coordinateObject.addProperty("x", coordinate.getX());
+                    coordinateObject.addProperty("y", coordinate.getY());
                     coordinatesArray.add(coordinateObject);
                 });
 
