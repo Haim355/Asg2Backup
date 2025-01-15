@@ -35,18 +35,22 @@ public class MessageBusImpl implements MessageBus {
     }
 
     private void SubscribeBase(Class<? extends Message> type, MicroService m) {
-        synchronized (this.messageHandlersMap) {
-            if (!messageHandlersMap.containsKey(type)) {
-                messageHandlersMap.put(type, new CopyOnWriteArrayList<>());
-                messageRoundRobin.put(type, new AtomicInteger(0));
+        if(type!=null) {
+            synchronized (this.messageHandlersMap) {
+                if (!messageHandlersMap.containsKey(type)) {
+                    messageHandlersMap.put(type, new CopyOnWriteArrayList<>());
+                    messageRoundRobin.put(type, new AtomicInteger(0));
+                }
+                this.messageHandlersMap.get(type).add(m);
             }
-            this.messageHandlersMap.get(type).add(m);
         }
     }
 
     @Override
     public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-        SubscribeBase(type, m);
+        if (type != null) {
+            SubscribeBase(type, m);
+        }
     }
 
     @Override
@@ -56,23 +60,25 @@ public class MessageBusImpl implements MessageBus {
 
     @Override
     public void sendBroadcast(Broadcast b) {
-        lockreadwrite.writeLock().lock();
-        try {
-            List<MicroService> services = messageHandlersMap.get(b.getClass());
-            if (services != null) {
-                services.forEach(service -> {
-                    try {
-                        subscribers.get(service).put(b);
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                        System.out.println("Broadcast interrupted for service: " + service.getName());
-                    }
-                });
+        if(b!=null) {
+            lockreadwrite.writeLock().lock();
+            try {
+                List<MicroService> services = messageHandlersMap.get(b.getClass());
+                if (services != null) {
+                    services.forEach(service -> {
+                        try {
+                            subscribers.get(service).put(b);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                            System.out.println("Broadcast interrupted for service: " + service.getName());
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                System.err.println("Broadcast failed: " + e.getMessage());
+            } finally {
+                lockreadwrite.writeLock().unlock();
             }
-        } catch (Exception e) {
-            System.err.println("Broadcast failed: " + e.getMessage());
-        } finally {
-            lockreadwrite.writeLock().unlock();
         }
     }
 
