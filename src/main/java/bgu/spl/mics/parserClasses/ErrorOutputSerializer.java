@@ -67,15 +67,16 @@ public class ErrorOutputSerializer implements JsonSerializer<ErrorOutput> {
             jsonObject.add("lastLidarFrames", lidarsFrames);
             JsonObject posesObject = new JsonObject();
             List <Pose> poses = error.getPoses();
-            for (Pose p: poses){
+            JsonArray posesArr = new JsonArray();
+                for (Pose p: poses){
                 JsonObject poseObject = new JsonObject();
                 poseObject.addProperty("time:", p.getTime());
                 poseObject.addProperty("x:", p.getX());
                 poseObject.addProperty("y:", p.getY());
                 poseObject.addProperty("yaw:", p.getYaw());
-                posesObject.add("",poseObject);
+                posesArr.add(poseObject);
             }
-            jsonObject.add("Poses:" , posesObject);
+            jsonObject.add("poses:" , posesArr);
         }
 
         // Serialize StatisticalFolder
